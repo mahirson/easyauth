@@ -14,3 +14,16 @@
 		<dependency org='com.mahirson.easylib' name='easyauth' rev='0.1'>
 			<artifact name='easyauth' ext='pom' ></artifact>
 		</dependency>
+
+# Saving user instance:
+        //MyUser class must extends User class of the library    
+        easyAuth.saveUser(new MyUser("token"));
+
+# Requesting if user logged in or not:
+        //hasUser method must be called when launching application
+        //this method reads saved user data from memory and sets it to variable    
+        if (easyAuth.hasUser()){
+                    System.out.println(easyAuth.getUser());
+         }
+
+# Sample code:
