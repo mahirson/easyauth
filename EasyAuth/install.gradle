@@ -1,0 +1,39 @@
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.mahirson.easylib'
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                groupId 'com.mahirson.easylib'
+                artifactId 'easyauth'
+                name 'easyauth'
+                description 'android auth library'
+                url 'https://github.com/cuttlesoft/android-library-example'
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'nicatmahirson'
+                        name 'Nicat Mahirson'
+                        email 'nicatmahirson@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection 'https://github.com/mahirson/easyauth.git'
+                    developerConnection 'https://github.com/mahirson/easyauth.git'
+                    url 'https://github.com/mahirson/easyauth'
+                }
+            }
+        }
+    }
+}
