@@ -1,0 +1,3 @@
+include ':EasyAuth'
+include ':app'
+rootProject.name = "MNLibraries"
