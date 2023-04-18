@@ -1,17 +1,9 @@
-package com.mn.easyauth;
+package com.mn.easyauth
 
-public class EasyAuthLog {
-    private static LogType LOG_TYPE;
-
-    public static void setLogType(LogType logType) {
-        LOG_TYPE = logType;
-    }
-
-    public static LogType getLogType() {
-        return LOG_TYPE;
-    }
+object EasyAuthLog {
+    var logType: LogType? = null
 }
 
-enum LogType {
-    DEBUG,RELEASE,ALL
+enum class LogType {
+    DEBUG, RELEASE, ALL
 }

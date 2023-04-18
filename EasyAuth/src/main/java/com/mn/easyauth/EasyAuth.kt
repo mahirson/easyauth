@@ -1,125 +1,106 @@
-package com.mn.easyauth;
+package com.mn.easyauth
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Context
+import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.ObjectMapper
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-public class EasyAuth<T extends User> {
+class EasyAuth<T : User?> {
     /*
-    * this is your authenticated user class
-    * must be extended User class
+     * get current user
      */
-    private T user;
-
-    private final String TAG = getClass().getName();
+    /*
+           * this is your authenticated user class
+           * must be extended User class
+            */
+    var user: T? = null
+        private set
+    private val TAG = javaClass.name
 
     /*
      * this is your authenticated user class type
      * must be extended User class
      * type is using for Json Processing
      */
-    private final Class<T> type;
-
-    private final Context context;
-
-    private final EasyAuthPrinter printer;
+    private val type: Class<T>
+    private val context: Context
+    private val printer: EasyAuthPrinter
 
     /*
      * normal constructor class
      */
-    public EasyAuth(Context context,Class<T> type) {
-        this.type = type;
-        this.context = context;
-        EasyAuthLog.setLogType(LogType.ALL);
-        printer = new EasyAuthPrinter();
+    constructor(context: Context, type: Class<T>) {
+        this.type = type
+        this.context = context
+        EasyAuthLog.logType = LogType.ALL
+        printer = EasyAuthPrinter()
     }
 
     /*
      * type is your authenticated user class type
      * logType is your logging level. Can be Debug,Release and All
      */
-    public EasyAuth(Context context,Class<T> type,LogType logType) {
-        this.type = type;
-        this.context = context;
-        EasyAuthLog.setLogType(logType);
-        printer = new EasyAuthPrinter();
+    constructor(context: Context, type: Class<T>, logType: LogType?) {
+        this.type = type
+        this.context = context
+        EasyAuthLog.logType = logType
+        printer = EasyAuthPrinter()
     }
 
-
-    private void deleteUser() {
-        SharedPreferences preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.apply();
+    private fun deleteUser() {
+        val preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor.clear()
+        editor.apply()
     }
 
     /*
      * saving user to shared preferences
      */
-    public void saveUser(T user) {
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = null;
+    fun saveUser(user: T) {
+        val ow = ObjectMapper().writer().withDefaultPrettyPrinter()
+        var json: String? = null
         try {
-            json = ow.writeValueAsString(user);
-            saveUser(json);
-            setUser(user);
-            printer.print(TAG,"user saved "+json);
-        } catch (JsonProcessingException e) {
-            printer.print(TAG,e.getMessage());
+            json = ow.writeValueAsString(user)
+            saveUser(json)
+            setUser(user)
+            printer.print(TAG, "user saved $json")
+        } catch (e: JsonProcessingException) {
+            printer.print(TAG, e.message)
         }
     }
 
-    public void saveUser(String user) {
-        SharedPreferences preferences = context.getSharedPreferences("user",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("data",user);
-        editor.apply();
+    fun saveUser(user: String?) {
+        val preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val editor = preferences.edit()
+        editor.putString("data", user)
+        editor.apply()
     }
 
     /*
      * check if user exists or not
      */
-    public boolean hasUser() {
-        SharedPreferences preferences = context.getSharedPreferences("user",Context.MODE_PRIVATE);
-        T user;
+    fun hasUser(): Boolean {
+        val preferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+        val user: T
         try {
-            user = new ObjectMapper().readValue(preferences.getString("data",""), getType());
-            setUser(user);
-            printer.print(TAG,"has saved user"+ user);
-            return true;
-        } catch (JsonProcessingException e) {
-            printer.print(TAG,"there is no user");
+            user = ObjectMapper().readValue(preferences.getString("data", ""), type)
+            setUser(user)
+            printer.print(TAG, "has saved user$user")
+            return true
+        } catch (e: JsonProcessingException) {
+            printer.print(TAG, "there is no user")
         }
-        return false;
+        return false
     }
 
     /*
      * logs out
      */
-    public void logOut() {
-        deleteUser();
+    fun logOut() {
+        deleteUser()
     }
 
-    /*
-     * get current user
-     */
-    @Nullable
-    public T getUser() {
-        return user;
-    }
-
-    private void setUser(@NonNull T user) {
-        this.user = user;
-    }
-
-    @NonNull
-    private Class<T> getType() {
-        return this.type;
+    private fun setUser(user: T) {
+        this.user = user
     }
 }
